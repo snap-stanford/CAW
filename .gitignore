@@ -1,4 +1,5 @@
 processed/*
+!processed/.gitkeep
 log/*
 !log/.gitkeep
 saved_checkpoints/*
