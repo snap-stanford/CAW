@@ -134,13 +134,12 @@ Our implementation adapts the code [here](https://drive.google.com/drive/folders
 If you compare with, build on, or use aspects of the paper and/or code, please cite us:
 ```text
 @inproceedings{
-anonymous2021inductive,
+wang2021inductive,
 title={Inductive Representation Learning in Temporal Networks via Causal Anonymous Walks},
-author={Anonymous},
-booktitle={Submitted to International Conference on Learning Representations},
+author={Yanbang Wang and Yen-Yu Chang and Yunyu Liu and Jure Leskovec and Pan Li},
+booktitle={International Conference on Learning Representations},
 year={2021},
-url={https://openreview.net/forum?id=KYPz4YsCPj},
-note={under review}
+url={https://openreview.net/forum?id=KYPz4YsCPj}
 }
 ```
 

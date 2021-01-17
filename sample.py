@@ -24,8 +24,8 @@ def seq_binary_sample_one(ngh_binomial_prob):
     for idx in range(len(ngh_binomial_prob)-1, -1, -1):
         a = a_l_seg[seg_idx]
         seg_idx += 1 # move one step forward
-        if seg_idx >= seg_len:  # regenerate a batch of new random values
-            a_l_seg = np.random.random((seg_len,))
+        if seg_idx >= seg_len:
+            a_l_seg = np.random.random((seg_len,))  # regenerate a batch of new random values
             seg_idx = 0  # and reset the seg_idx
         if a < ngh_binomial_prob[idx]:
             # print('=' * 50)
