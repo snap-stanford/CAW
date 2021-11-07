@@ -40,6 +40,9 @@ logger, get_checkpoint_path, best_model_path = set_up_logger(args, sys_argv)
 
 # Load data and sanity check
 g_df = pd.read_csv('./processed/ml_{}.csv'.format(DATA))
+if args.data_usage < 1:
+    g_df = g_df.iloc[:int(args.data_usage*g_df.shape[0])]
+    logger.info('use partial data, ratio: {}'.format(args.data_usage))
 e_feat = np.load('./processed/ml_{}.npy'.format(DATA))
 n_feat = np.load('./processed/ml_{}_node.npy'.format(DATA))
 src_l = g_df.u.values
@@ -48,8 +51,8 @@ e_idx_l = g_df.idx.values
 label_l = g_df.label.values
 ts_l = g_df.ts.values
 max_idx = max(src_l.max(), dst_l.max())
-assert(np.unique(np.stack([src_l, dst_l])).shape[0] == max_idx)  # all nodes except node 0 should appear and be compactly indexed
-assert(n_feat.shape[0] == max_idx + 1)  # the nodes need to map one-to-one to the node feat matrix
+assert(np.unique(np.stack([src_l, dst_l])).shape[0] == max_idx or ~math.isclose(1, args.data_usage))  # all nodes except node 0 should appear and be compactly indexed
+assert(n_feat.shape[0] == max_idx + 1 or ~math.isclose(1, args.data_usage))  # the nodes need to map one-to-one to the node feat matrix
 
 # split and pack the data by generating valid train/val/test mask according to the "mode"
 val_time, test_time = list(np.quantile(g_df.ts, [0.70, 0.85]))
@@ -120,7 +123,7 @@ device = torch.device('cuda:{}'.format(GPU))
 cawn = CAWN(n_feat, e_feat, agg=AGG,
             num_layers=NUM_LAYER, use_time=USE_TIME, attn_agg_method=ATTN_AGG_METHOD, attn_mode=ATTN_MODE,
             n_head=ATTN_NUM_HEADS, drop_out=DROP_OUT, pos_dim=POS_DIM, pos_enc=POS_ENC,
-            num_neighbors=NUM_NEIGHBORS, walk_n_head=WALK_N_HEAD, walk_mutual=WALK_MUTUAL, walk_linear_out=args.walk_linear_out,
+            num_neighbors=NUM_NEIGHBORS, walk_n_head=WALK_N_HEAD, walk_mutual=WALK_MUTUAL, walk_linear_out=args.walk_linear_out, walk_pool=args.walk_pool,
             cpu_cores=CPU_CORES, verbosity=VERBOSITY, get_checkpoint_path=get_checkpoint_path)
 cawn.to(device)
 optimizer = torch.optim.Adam(cawn.parameters(), lr=LEARNING_RATE)

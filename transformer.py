@@ -48,8 +48,9 @@ class TransformerEncoderLayer(nn.Module):
         Shape:
             see the docs in Transformer class.
         """
-        src2 = self.self_attn(src, src, src, attn_mask=src_mask,
-                              key_padding_mask=src_key_padding_mask)[0]
+        src_t = src.transpose(0, 1)
+        src2 = self.self_attn(src_t, src_t, src_t, attn_mask=src_mask,
+                              key_padding_mask=src_key_padding_mask)[0].transpose(0, 1)
         src = src + self.dropout1(src2)
         src = self.norm1(src)
         if hasattr(self, "activation"):
@@ -116,8 +117,9 @@ class TransformerDecoderLayer(nn.Module):
         Shape:
             see the docs in Transformer class.
         """
-        tgt2 = self.self_attn(tgt, tgt, tgt, attn_mask=tgt_mask,
-                              key_padding_mask=tgt_key_padding_mask)[0]
+        tgt_t = tgt.transpose(0, 1)
+        tgt2 = self.self_attn(tgt_t, tgt_t, tgt_t, attn_mask=tgt_mask,
+                              key_padding_mask=tgt_key_padding_mask)[0].transpose(0, 1)
         tgt = tgt + self.dropout1(tgt2)
         tgt = self.norm1(tgt)
         tgt2 = self.multihead_attn(tgt, memory, memory, attn_mask=memory_mask,
