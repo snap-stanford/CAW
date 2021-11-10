@@ -1,6 +1,5 @@
 import pandas as pd
 from log import *
-from parser import *
 from eval import *
 from utils import *
 from train import *
