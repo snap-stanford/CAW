@@ -7,6 +7,7 @@ numba_logger.setLevel(logging.WARNING)
 
 @jit(nopython=True)
 def nodets2key(batch: int, node: int, ts: float):
+    ts = 0
     key = '-'.join([str(batch), str(node), float2str(ts)])
     return key
 
